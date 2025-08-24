@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrazaDoc - Pitch Hackathon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            padding: 60px;
+            background: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-content {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: #2d3748;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #4a5568;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #718096;
+            margin-bottom: 3rem;
+            max-width: 800px;
+        }
+
+        .pitch-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #2d3748;
+            max-width: 900px;
+            margin-bottom: 2rem;
+            text-align: left;
+            background: #f7fafc;
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, rgba(102, 126, 234, 0.2) 0%, rgba(102, 126, 234, 0.2) 100%);
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+
+        .feature-desc {
+            font-size: 1rem;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .flow-step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .flow-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1rem auto;
+        }
+
+        .flow-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .flow-desc {
+            font-size: 0.9rem;
+            color: #4a5568;
+            line-height: 1.4;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2d3748;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #2d3748;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        .logo {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            z-index: 1000;
+        }
+
+        .pain-point {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 5px solid #e53e3e;
+        }
+
+        .solution-point {
+            background: #c6f6d5;
+            color: #2f855a;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 5px solid #38a169;
+        }
+
+        .demo-cta {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem 3rem;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .pitch-text {
+                font-size: 1.1rem;
+                padding: 1.5rem;
+            }
+            
+            .flow-steps {
+                flex-direction: column;
+            }
+            
+            .flow-step::after {
+                content: '↓';
+                right: 50%;
+                transform: translateX(50%);
+                top: auto;
+                bottom: -1rem;
+            }
+        }
+
+        .animate-in {
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo">🏠 TrazaDoc</div>
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">8</span>
+    </div>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Título -->
+        <div class="slide active">
+            <div class="slide-content">
+                <h1>TrazaDoc</h1>
+                <p class="subtitle">Trazabilidad total de cada documento</p>
+                <div class="features-grid">
+                    <div class="feature-card animate-in">
+                        <div class="feature-icon">📱</div>
+                        <div class="feature-title">WhatsApp Conversacional</div>
+                        <div class="feature-desc">Asistente que guía paso a paso por el canal que ya usan</div>
+                    </div>
+                    <div class="feature-card animate-in">
+                        <div class="feature-icon">🔄</div>
+                        <div class="feature-title">Orquestado con n8n</div>
+                        <div class="feature-desc">Automatización inteligente de todo el proceso</div>
+                    </div>
+                    <div class="feature-card animate-in">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-title">Validación Instantánea</div>
+                        <div class="feature-desc">OCR, clasificación y validación en segundos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: El Problema -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>El Cuello de Botella</h2>
+                <div class="pain-point">
+                    <h3>❌ Dolor Actual</h3>
+                    <ul style="text-align: left; margin-top: 1rem; font-size: 1.1rem;">
+                        <li>Clientes envían documentos <strong>incompletos o inválidos</strong></li>
+                        <li>Equipo pierde <strong>horas</strong> pidiendo correcciones</li>
+                        <li>Chequeos dispersos con <strong>riesgo de error humano</strong></li>
+                        <li>Expedientes tardan <strong>días</strong> en estar listos</li>
+                    </ul>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">70%</span>
+                        <span class="stat-label">Documentos requieren corrección</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">5-10</span>
+                        <span class="stat-label">Días promedio expediente listo</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">40%</span>
+                        <span class="stat-label">Tiempo del equipo en retrabajo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: La Solución -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Nuestra Solución</h2>
+                <div class="solution-point">
+                    <h3>✅ TrazaDoc</h3>
+                    <p style="font-size: 1.2rem; margin-top: 1rem;">
+                        Asistente conversacional por <strong>WhatsApp</strong> que <span class="highlight">pide, clasifica, extrae y valida</span> 
+                        documentos inmobiliarios en minutos con reglas del checklist operativo.
+                    </p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <div class="feature-title">Clasificación Automática</div>
+                        <div class="feature-desc">Detecta cédula, RUT, CTL, paz y salvo, servicios</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">👁️</div>
+                        <div class="feature-title">OCR Inteligente</div>
+                        <div class="feature-desc">Extrae campos clave con validación cruzada</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-title">Validación en Tiempo Real</div>
+                        <div class="feature-desc">Vigencias, coincidencias, fuentes oficiales</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Cómo Funciona -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>¿Cómo Funciona?</h2>
+                <div class="flow-steps">
+                    <div class="flow-step">
+                        <div class="flow-number">1</div>
+                        <div class="flow-title">Chat Guiado</div>
+                        <div class="flow-desc">Usuario recibe checklist con ejemplos visuales</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-number">2</div>
+                        <div class="flow-title">Subida Smart</div>
+                        <div class="flow-desc">Sube documento y se clasifica automáticamente</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-number">3</div>
+                        <div class="flow-title">Validación OCR</div>
+                        <div class="flow-desc">Extracción de datos y aplicación de reglas</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-number">4</div>
+                        <div class="flow-title">Feedback Inmediato</div>
+                        <div class="flow-desc">OK ✅ o corrección con instrucciones claras</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-number">5</div>
+                        <div class="flow-title">Expediente Listo</div>
+                        <div class="flow-desc">Trazabilidad completa para notaría</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Validaciones -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>¿Qué Validamos?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🆔</div>
+                        <div class="feature-title">Identidad</div>
+                        <div class="feature-desc">
+                            <strong>Cédulas:</strong> Lectura, hologramas, estado en Registraduría<br>
+                            <strong>Cruce:</strong> Coincidencias con RUT, CTL y escritura
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📋</div>
+                        <div class="feature-title">RUT (DIAN)</div>
+                        <div class="feature-desc">
+                            <strong>Vigencia:</strong> ≤ 90 días<br>
+                            <strong>Consistencia:</strong> Nombre/NIT con cédula
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏠</div>
+                        <div class="feature-title">CTL (SNR)</div>
+                        <div class="feature-desc">
+                            <strong>Verificación:</strong> Matrícula, titulares, gravámenes<br>
+                            <strong>Alertas:</strong> Hipotecas, afectaciones
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💰</div>
+                        <div class="feature-title">Paz y Salvo</div>
+                        <div class="feature-desc">
+                            <strong>Validación:</strong> Dirección, firmas, sellos<br>
+                            <strong>Vigencia:</strong> Administración al día
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-title">Servicios</div>
+                        <div class="feature-desc">
+                            <strong>Estructura:</strong> Dirección, contrato, medidor<br>
+                            <strong>Alertas:</strong> Cargos no relacionados
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <div class="feature-title">Fuentes Oficiales</div>
+                        <div class="feature-desc">
+                            <strong>APIs:</strong> Registraduría, DIAN, SNR<br>
+                            <strong>Antifraude:</strong> Metadatos, capas, QR/PIN
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Impacto -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Impacto Esperado</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">-50-70%</span>
+                        <span class="stat-label">Reducción de retrabajo</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">Horas</span>
+                        <span class="stat-label">TAT expediente listo (vs días)</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">+20-35%</span>
+                        <span class="stat-label">Completitud al primer intento</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Trazabilidad documental</span>
+                    </div>
+                </div>
+                <div class="solution-point" style="margin-top: 3rem;">
+                    <h3>🎯 Resultado</h3>
+                    <p style="font-size: 1.2rem; margin-top: 1rem;">
+                        <strong>Cierre sin fricción</strong> para el cliente y <strong>operación más liviana</strong> para el equipo
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Demo -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>Demo en Vivo</h2>
+                <div class="pitch-text">
+                    En la demo verán tres cosas:
+                    <ol style="margin-top: 1.5rem; font-size: 1.2rem; line-height: 2;">
+                        <li><strong>Chat guiado</strong> en WhatsApp con validaciones en tiempo real</li>
+                        <li><strong>Panel de n8n</strong> con reglas pass/fail y trazabilidad por documento</li>
+                        <li><strong>Métricas:</strong> tiempo a "expediente listo", causas de rechazo y tasa de corrección</li>
+                    </ol>
+                </div>
+                <button class="demo-cta">
+                    🚀 Iniciar Demo Interactivo
+                </button>
+            </div>
+        </div>
+
+        <!-- Slide 8: Cierre -->
+        <div class="slide">
+            <div class="slide-content">
+                <h2>¿Siguientes Pasos?</h2>
+                <div class="solution-point">
+                    <h3>🎯 Propuesta</h3>
+                    <p style="font-size: 1.3rem; margin-top: 1rem;">
+                        Listos para mostrar el <strong>demo funcional</strong> y acordar <strong>KPIs del piloto</strong> 
+                        (completitud, TAT, retrabajo)
+                    </p>
+                </div>
+                <div class="features-grid" style="margin-top: 3rem;">
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <div class="feature-title">Post-Hackathon</div>
+                        <div class="feature-desc">Escalamos reglas por ciudad y profundizamos verificaciones oficiales</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🤝</div>
+                        <div class="feature-title">Integración Habi</div>
+                        <div class="feature-desc">Se conecta a la plataforma existente sin fricción</div>
+                    </div>
+                </div>
+                <button class="demo-cta">
+                    📅 ¿Agendamos revisión del demo y KPIs de piloto?
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="previousSlide()">
+            <i class="fas fa-chevron-left"></i> Anterior
+        </button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()">
+            Siguiente <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = document.querySelectorAll('.slide').length;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            
+            if (n > totalSlides) currentSlide = 1;
+            if (n < 1) currentSlide = totalSlides;
+            
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            slides[currentSlide - 1].classList.add('active');
+            
+            // Animate elements
+            setTimeout(() => {
+                const animateElements = slides[currentSlide - 1].querySelectorAll('.feature-card, .stat-card, .flow-step');
+                animateElements.forEach((el, index) => {
+                    setTimeout(() => {
+                        el.style.animation = 'slideInUp 0.6s ease-out forwards';
+                    }, index * 100);
+                });
+            }, 200);
+            
+            document.getElementById('current-slide').textContent = currentSlide;
+            
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            currentSlide--;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+
+        // Auto-play demo (optional)
+        let autoPlay = false;
+        function toggleAutoPlay() {
+            autoPlay = !autoPlay;
+            if (autoPlay) {
+                const interval = setInterval(() => {
+                    if (!autoPlay || currentSlide === totalSlides) {
+                        clearInterval(interval);
+                        return;
+                    }
+                    nextSlide();
+                }, 8000);
+            }
+        }
+
+        // Add click handlers for demo buttons
+        document.querySelectorAll('.demo-cta').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('🚀 Demo iniciado! En un entorno real, esto abriría WhatsApp con el asistente TrazaDoc');
+            });
+        });
+    </script>
+</body>
+</html>

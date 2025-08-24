@@ -1,8 +1,8 @@
-# Presentación TrazaDoc - Pitch Hackathon
+# Presentación Ami - Ultimate Agent para Calificación de Leads
 
 ## 🎯 Descripción
 
-Presentación HTML interactiva para el pitch de **TrazaDoc** en el hackathon CTW IA. La presentación está optimizada para ser mostrada en pantalla completa durante la presentación de 90 segundos.
+Presentación HTML interactiva para el pitch de **Ami - Ultimate Agent** en el hackathon CTW IA. La presentación está optimizada para ser mostrada en pantalla completa durante la presentación de 90 segundos.
 
 ## 🚀 Cómo Usar
 
@@ -28,9 +28,9 @@ npx serve .
 
 ### 8 Slides Principales:
 
-1. **Título** - TrazaDoc y características principales
+1. **Título** - Ami Ultimate Agent y características principales
 2. **El Problema** - Cuello de botella actual con estadísticas
-3. **La Solución** - Cómo TrazaDoc resuelve el problema
+3. **La Solución** - Cómo Ami resuelve el problema
 4. **Cómo Funciona** - Flujo paso a paso del proceso
 5. **Validaciones** - Tipos de documentos y verificaciones
 6. **Impacto** - Métricas esperadas y beneficios
@@ -58,7 +58,7 @@ npx serve .
 ## 🎯 Optimizado para Pitch de 90 Segundos
 
 ### Timing Sugerido:
-- **Slide 1** (10s): Presentación de TrazaDoc
+- **Slide 1** (10s): Presentación de Ami Ultimate Agent
 - **Slide 2** (15s): Problema actual con datos impactantes
 - **Slide 3** (15s): Solución propuesta
 - **Slide 4** (15s): Flujo de funcionamiento
